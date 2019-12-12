@@ -1,0 +1,30 @@
+{
+  "name": "apollo-babel",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "license": "MIT",
+  "scripts": {
+    "serve": "nodemon",
+    "start": "node ./dist/index.js",
+    "dev": "babel-node ./src/index.js",
+    "prod": "yarn clean && cross-env NODE_ENV=production yarn build && yarn start",
+    "clean": "rimraf dist",
+    "build": "babel ./src --out-dir dist",
+    "docker:build": "yarn clean && cross-env NODE_ENV=production yarn build && docker build -t $npm_package_name:$npm_package_version .",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down"
+  },
+  "dependencies": {
+    "apollo-server": "^2.9.7",
+    "graphql": "^14.5.8"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.6.4",
+    "@babel/core": "^7.6.4",
+    "@babel/node": "^7.6.3",
+    "@babel/preset-env": "^7.6.3",
+    "cross-env": "^6.0.3",
+    "nodemon": "^1.19.4",
+    "rimraf": "^3.0.0"
+  }
+}

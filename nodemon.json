@@ -1,0 +1,5 @@
+{
+  "exec": "cross-env NODE_ENV=development yarn dev",
+  "watch": ["src/*"],
+  "ext": "js, json"
+}
