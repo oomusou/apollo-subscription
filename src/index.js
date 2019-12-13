@@ -45,7 +45,7 @@ let addBook = (_, { book }) => {
 }
 
 let bookAdded = {
-  subscribe: () => pubsub.asyncIterator(['bookAdded'])
+  subscribe: () => pubsub.asyncIterator('bookAdded')
 }
 
 let resolvers = {
