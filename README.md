@@ -1,3 +1,3 @@
-## Babel + Node + GraphQL Subscription
+## Babel + Node + GraphQL Subscription Filter
 
-https://lambda4.fun/graphql/apollo/subscription
+https://lambda4.fun/graphql/apollo/subscription-filter

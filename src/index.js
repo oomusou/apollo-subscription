@@ -1,9 +1,8 @@
-import { ApolloServer, gql, PubSub } from 'apollo-server'
+import { ApolloServer, gql, PubSub, withFilter } from 'apollo-server'
 
 let data = [
   { title: 'FP in JavaScript', price: 100 },
   { title: 'RxJS in Action', price: 200 },
-  { title: 'Speaking JavaScript', price: 300 }
 ]
 
 let pubsub = new PubSub()
@@ -12,9 +11,13 @@ let typeDefs = gql`
   type Query {
     books: [Book]
   }
-
+  
   type Mutation {
     addBook(book: BookInput!): Book
+  }
+
+  type Subscription {
+    bookAdded(title: String!): Book
   }
 
   type Book {
@@ -26,10 +29,6 @@ let typeDefs = gql`
     title: String!
     price: Int!
   }
-
-  type Subscription {
-    bookAdded: Book
-  }
 `
 
 let books = () => data
@@ -38,14 +37,18 @@ let addBook = (_, { book }) => {
   data.push(book)
 
   pubsub.publish('bookAdded', {
-    bookAdded: book
+    bookAdded: book,
+    title: book.title
   })
 
   return book
 }
 
 let bookAdded = {
-  subscribe: () => pubsub.asyncIterator('bookAdded')
+  subscribe: withFilter(
+    () => pubsub.asyncIterator('bookAdded'),
+    (payload, variables) => payload.title === variables.title
+  )
 }
 
 let resolvers = {
@@ -60,8 +63,7 @@ let resolvers = {
   }
 }
 
-let apolloServer = new ApolloServer({ typeDefs, resolvers })
-
-apolloServer.listen()
+new ApolloServer({ typeDefs, resolvers })
+  .listen()
   .then(({ url }) => `GraphQL Server ready at ${ url }`)
   .then(console.log)
